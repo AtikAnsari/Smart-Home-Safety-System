@@ -624,13 +624,22 @@ section[id], main[id], .sec-head[id] {
 .foot-dot.danger { background: var(--red);   box-shadow: 0 0 6px var(--red);   animation: blink 0.6s infinite; }
 
 /* ── GAUGE ── */
+#gasGauge {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: 200 / 110;
+  display: block;
+}
+
 .gauge-wrap {
   position: relative;
   display: flex;
   justify-content: center;
   align-items: flex-end;
   height: 110px;
-  margin: 4px 0 0;
+  max-width: 200px;
+  width: 100%;
+  margin: 4px auto 0;
 }
 
 .gauge-val {
@@ -651,7 +660,9 @@ section[id], main[id], .sec-head[id] {
   display: flex;
   gap: 8px;
   height: 120px;
-  margin: 4px 0 0;
+  max-width: 240px;
+  width: 100%;
+  margin: 4px auto 0;
 }
 
 .tank-body {
@@ -1605,59 +1616,533 @@ section[id], main[id], .sec-head[id] {
   gap: 8px;
 }
 
-/* ── RESPONSIVE ── */
-@media (max-width: 1180px) {
-  .header-container { padding: 0 16px; }
-  .nav-link { padding: 6px 8px; font-size: 12px; }
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   RESPONSIVE DESIGN SYSTEM
+   • Large desktops: 1440px and above
+   • Laptops: 1024px–1439px
+   • Tablets: 768px–1023px
+   • Mobile phones: 375px–767px
+   • Small phones: 320px–374px
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+/* ── LARGE DESKTOPS (1440px and above) ── */
+@media (min-width: 1440px) {
+  .header-container,
+  .dashboard,
+  .footer-inner,
+  .footer-bar {
+    max-width: 1360px;
+  }
+}
+
+/* ── LAPTOPS & INTERMEDIATE DESKTOPS (1024px–1240px) ── */
+@media (max-width: 1240px) {
+  .header-container { padding: 0 18px; }
+  .nav-link { padding: 6px 8px; font-size: 12px; gap: 5px; }
+  .system-status { font-size: 11px; padding: 5px 10px; }
   .workflow-step { padding: 14px 8px; }
   .step-title { font-size: 12px; }
+  .step-sub { font-size: 10px; }
 }
 
-@media (max-width: 960px) {
-  .cards { grid-template-columns: 1fr; }
-  .about-grid { grid-template-columns: 1fr; }
-  .arch-modules-grid { grid-template-columns: repeat(2, 1fr); }
-  .workflow-track { flex-direction: column; }
-  .workflow-arrow { transform: rotate(90deg); padding: 8px 0; }
-  .header-right .system-status { display: none; }
-  .demo-banner { flex-direction: column; align-items: flex-start; }
-}
-
-@media (max-width: 860px) {
+/* ── TABLETS & HYBRID DEVICES (768px–1023px) ── */
+@media (max-width: 1023px) {
+  /* Navigation Mobile Drawer */
+  .nav-toggle {
+    display: flex;
+  }
   .nav-menu {
     display: none;
     position: absolute;
-    top: var(--header-h);
+    top: 100%;
     left: 0;
     right: 0;
     background: var(--surface);
-    border-bottom: 1px solid var(--border2);
+    border-bottom: 2px solid var(--cyan);
+    border-top: 1px solid var(--border2);
     flex-direction: column;
-    padding: 14px 20px;
+    padding: 16px 20px;
     gap: 8px;
-    box-shadow: 0 12px 30px rgba(0,0,0,0.6);
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.7);
+    z-index: 200;
   }
   .nav-menu.open {
     display: flex;
   }
-  .nav-toggle {
-    display: flex;
+  .nav-menu .nav-link {
+    width: 100%;
+    padding: 10px 14px;
+    font-size: 13px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    justify-content: flex-start;
   }
-  .log-head-row, .log-item { grid-template-columns: 100px 1fr 60px 28px; }
+  .nav-menu .nav-link:hover,
+  .nav-menu .nav-link.active {
+    border-color: var(--cyan);
+    background: var(--cyan-dim);
+    color: var(--cyan);
+  }
+
+  /* Header items */
+  .header-right .system-status {
+    display: none;
+  }
+
+  /* Dashboard Cards on Tablet */
+  .cards {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  #cardWater {
+    grid-column: 1 / -1;
+  }
+  #cardWater .tank-wrap {
+    max-width: 280px;
+    margin: 4px auto 0;
+  }
+
+  /* Workflow */
+  .workflow-track {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .workflow-arrow {
+    transform: rotate(90deg);
+    padding: 6px 0;
+  }
+  .workflow-step {
+    width: 100%;
+    padding: 16px 14px;
+  }
+
+  /* Portfolio Grids */
+  .about-grid {
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  }
+  .arch-modules-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .features-grid {
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  }
+  .tech-grid {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  }
+  .hardware-grid {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  }
+
+  /* Event Log */
+  .log-head-row,
+  .log-item {
+    grid-template-columns: 100px 1fr 60px 28px;
+  }
+
+  /* Footer */
+  .footer-inner {
+    flex-direction: column;
+    gap: 28px;
+  }
+  .footer-cols {
+    gap: 32px;
+  }
 }
 
-@media (max-width: 600px) {
-  .dashboard { width: 96%; }
-  .ctrl-row { flex-direction: column; align-items: flex-start; }
-  .footer-cols { gap: 24px; }
-  .clock-wrap { display: none; }
-  .logo-sub { display: none; }
-  .log-head-row, .log-item { grid-template-columns: 90px 1fr 28px; }
-  .log-head-row span:nth-child(3), .log-level { display: none; }
-  .sec-head { flex-wrap: wrap; }
-  .sim-toggle-btn { width: 100%; justify-content: center; }
-  .arch-modules-grid { grid-template-columns: 1fr; }
-  .features-grid { grid-template-columns: 1fr; }
-  .footer-inner { flex-direction: column; gap: 28px; }
-  .footer-bar { flex-direction: column; text-align: center; }
+/* ── MOBILE PHONES (375px–767px) ── */
+@media (max-width: 767px) {
+  .dashboard {
+    width: 95%;
+    padding: 18px 0 40px;
+  }
+
+  /* Header & Logo */
+  .header-container {
+    padding: 0 14px;
+  }
+  .logo {
+    gap: 10px;
+  }
+  .logo-icon {
+    width: 38px;
+    height: 38px;
+    font-size: 16px;
+  }
+  .logo-main {
+    font-size: 18px;
+  }
+  .logo-sub {
+    font-size: 9px;
+  }
+  .clock-wrap {
+    display: none;
+  }
+
+  /* Demo Banner */
+  .demo-banner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 12px 14px;
+  }
+  .demo-title {
+    font-size: 13px;
+  }
+  .demo-sub {
+    font-size: 11px;
+  }
+
+  /* Sensor Cards in Single Column */
+  .cards {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  #cardWater {
+    grid-column: auto;
+  }
+  .card {
+    padding: 18px 16px 14px;
+  }
+  .gauge-wrap {
+    max-width: 200px;
+    min-height: 105px;
+    margin: 4px auto 0;
+  }
+  .tank-wrap {
+    max-width: 240px;
+    margin: 4px auto 0;
+  }
+
+  /* Alert Panel */
+  .alert-panel {
+    flex-direction: column;
+    text-align: center;
+    gap: 14px;
+    padding: 18px 16px;
+  }
+  .alert-icon-ring {
+    margin: 0 auto;
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+  }
+  .alert-title {
+    font-size: 16px;
+  }
+  .alert-msg {
+    font-size: 12px;
+  }
+  .alert-level-col {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+  .alert-level {
+    width: 100%;
+    max-width: 180px;
+    font-size: 18px;
+    padding: 6px 12px;
+  }
+
+  /* Section Headings */
+  .sec-head {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .sim-toggle-btn {
+    width: 100%;
+    justify-content: center;
+    min-height: 42px;
+    font-size: 12px;
+  }
+
+  /* Manual Override Controls */
+  .ctrl-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px 14px;
+  }
+  .ctrl-label {
+    width: 100%;
+    font-size: 13px;
+  }
+  .ctrl-btns {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .ctrl-btn {
+    min-height: 42px;
+    padding: 8px 14px;
+    font-size: 12px;
+    flex: 1 1 auto;
+    justify-content: center;
+  }
+
+  /* Event Log */
+  .log-head-row,
+  .log-item {
+    grid-template-columns: 85px 1fr 32px;
+    gap: 8px;
+    padding: 8px 10px;
+    font-size: 11px;
+  }
+  .log-head-row span:nth-child(3),
+  .log-level {
+    display: none;
+  }
+  .log-del {
+    min-width: 32px;
+    min-height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+  }
+  .clear-btn {
+    min-height: 32px;
+    padding: 6px 12px;
+  }
+
+  /* Portfolio Sections */
+  .about-grid,
+  .features-grid,
+  .arch-modules-grid,
+  .tech-grid,
+  .hardware-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .arch-box {
+    max-width: 100%;
+    width: 100%;
+    padding: 12px 14px;
+  }
+  .arch-explanation {
+    font-size: 12px;
+    padding: 14px 16px;
+  }
+  .workflow-wrap {
+    padding: 18px 14px;
+  }
+  .workflow-notice {
+    font-size: 10px;
+    padding: 8px 10px;
+  }
+  .section-lead {
+    font-size: 13px;
+    padding: 14px 16px;
+  }
+
+  /* Footer */
+  .footer-inner {
+    padding: 28px 16px 20px;
+    gap: 24px;
+  }
+  .footer-cols {
+    flex-direction: column;
+    gap: 20px;
+  }
+  .footer-bar {
+    flex-direction: column;
+    text-align: center;
+    gap: 8px;
+    padding: 12px 16px;
+  }
+}
+
+/* ── SMALL PHONES (320px–374px) ── */
+@media (max-width: 374px) {
+  .dashboard {
+    width: 94%;
+    padding: 12px 0 32px;
+  }
+
+  /* Header */
+  .header-container {
+    padding: 0 8px;
+    gap: 8px;
+  }
+  .logo {
+    gap: 8px;
+  }
+  .logo-icon {
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
+  }
+  .logo-main {
+    font-size: 15px;
+    letter-spacing: 0.08em;
+  }
+  .logo-sub {
+    display: none;
+  }
+  .header-right {
+    gap: 6px;
+  }
+  .theme-toggle,
+  .nav-toggle {
+    width: 32px;
+    height: 32px;
+    font-size: 13px;
+  }
+  .nav-menu {
+    padding: 12px 14px;
+    gap: 6px;
+  }
+  .nav-menu.open .nav-link {
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+
+  /* Ticker */
+  .ticker-label {
+    padding: 0 8px;
+    font-size: 9px;
+  }
+  .ticker-inner {
+    font-size: 10px;
+  }
+
+  /* Sensor Cards */
+  .card {
+    padding: 14px 10px 12px;
+    gap: 8px;
+  }
+  .sensor-id {
+    font-size: 9px;
+  }
+  .sensor-tag {
+    font-size: 8px;
+  }
+  .card-name {
+    font-size: 11px;
+  }
+  #gasGauge {
+    max-width: 175px;
+  }
+  .gauge-wrap {
+    max-width: 175px;
+    min-height: 95px;
+  }
+  .gauge-val {
+    font-size: 18px;
+  }
+  .tank-wrap {
+    max-width: 190px;
+    height: 105px;
+  }
+  .tank-pct {
+    font-size: 13px;
+  }
+  .card-val {
+    font-size: 22px;
+  }
+  .card-foot {
+    font-size: 9px;
+  }
+
+  /* Controls */
+  .ctrl-row {
+    padding: 10px 8px;
+  }
+  .ctrl-btns {
+    gap: 6px;
+  }
+  .ctrl-btn {
+    font-size: 11px;
+    padding: 8px 6px;
+    flex: 1 1 calc(50% - 6px);
+    justify-content: center;
+  }
+
+  /* Activity Log */
+  .log-head-row,
+  .log-item {
+    grid-template-columns: 68px 1fr 28px;
+    gap: 4px;
+    padding: 6px 6px;
+    font-size: 11px;
+  }
+  .log-time {
+    font-size: 10px;
+  }
+  .log-del {
+    min-width: 28px;
+    min-height: 28px;
+    font-size: 11px;
+  }
+
+  /* Section Heads & Cards */
+  .sec-title {
+    font-size: 12px;
+    letter-spacing: 0.12em;
+  }
+  .clear-btn,
+  .sim-toggle-btn {
+    font-size: 10px;
+    padding: 5px 8px;
+  }
+  .about-card,
+  .feature-card,
+  .tech-card,
+  .hardware-card {
+    padding: 12px 10px;
+  }
+  .feature-title,
+  .about-card-title,
+  .tech-name,
+  .hardware-name {
+    font-size: 13px;
+  }
+  .feature-desc,
+  .tech-desc,
+  .hardware-desc,
+  .about-card-list li {
+    font-size: 11px;
+  }
+  .about-icon-ring {
+    width: 36px;
+    height: 36px;
+    font-size: 14px;
+  }
+  .workflow-step {
+    padding: 12px 8px;
+  }
+  .step-title {
+    font-size: 11px;
+  }
+  .step-sub {
+    font-size: 9px;
+  }
+
+  /* Footer */
+  .footer-inner {
+    padding: 20px 10px 16px;
+  }
+  .footer-cols > div {
+    min-width: 100%;
+  }
+  .footer-bar {
+    padding: 10px 10px;
+    font-size: 10px;
+  }
+}
+
+/* ── TOUCH DEVICE ACCESSIBILITY ENHANCEMENTS ── */
+@media (hover: none) and (pointer: coarse) {
+  .ctrl-btn,
+  .sim-toggle-btn,
+  .theme-toggle,
+  .nav-toggle,
+  .clear-btn {
+    min-height: 44px;
+  }
+  .nav-menu.open .nav-link {
+    min-height: 44px;
+  }
 }

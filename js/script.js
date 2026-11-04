@@ -722,23 +722,53 @@ function setupNavigation() {
 
   // Mobile drawer toggle
   if (navToggle && navMenu) {
-    navToggle.addEventListener('click', () => {
-      navMenu.classList.toggle('open');
+    const toggleMenu = (open) => {
+      const willOpen = typeof open === 'boolean' ? open : !navMenu.classList.contains('open');
+      navMenu.classList.toggle('open', willOpen);
+      navToggle.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
       const icon = navToggle.querySelector('i');
       if (icon) {
-        icon.className = navMenu.classList.contains('open') ? 'fa-solid fa-xmark' : 'fa-solid fa-bars';
+        icon.className = willOpen ? 'fa-solid fa-xmark' : 'fa-solid fa-bars';
       }
+    };
+
+    navToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleMenu();
     });
 
-    // Close mobile drawer when link clicked
+    // Close mobile drawer when any link is clicked
     navLinks.forEach(link => {
       link.addEventListener('click', () => {
         if (navMenu.classList.contains('open')) {
-          navMenu.classList.remove('open');
-          const icon = navToggle.querySelector('i');
-          if (icon) icon.className = 'fa-solid fa-bars';
+          toggleMenu(false);
         }
       });
+    });
+
+    // Close mobile drawer when clicking outside
+    document.addEventListener('click', (e) => {
+      if (navMenu.classList.contains('open') && !navMenu.contains(e.target) && !navToggle.contains(e.target)) {
+        toggleMenu(false);
+      }
+    });
+
+    // Close mobile drawer on Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && navMenu.classList.contains('open')) {
+        toggleMenu(false);
+      }
+    });
+
+    // Close mobile drawer if viewport resized to desktop (> 1023px)
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 1023 && navMenu.classList.contains('open')) {
+        toggleMenu(false);
+      }
+      // Re-render gauge canvas on resize to guarantee crisp rendering
+      if (state.gas !== null) {
+        drawGauge('gasGauge', state.gas);
+      }
     });
   }
 
