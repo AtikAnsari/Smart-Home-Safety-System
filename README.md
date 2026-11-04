@@ -7,6 +7,32 @@ An interactive, client-side IoT dashboard simulation showcasing real-time teleme
 
 ---
 
+## 📸 Dashboard Preview
+
+![Smart Home Safety System Dashboard](screenshots/dashboard.png)
+
+*Figure 1: Smart Home Safety Control Panel running in interactive Demo Mode.*
+
+> **Simulation Notice:** All sensor readings, alert triggers, gauges, water level animations, and hardware interactions shown in this dashboard are simulated entirely client-side using JavaScript. No physical Arduino microcontroller, physical sensors, or backend servers are connected.
+
+---
+
+## 🔄 System Workflow
+
+![Smart Home Safety System Workflow](screenshots/workflow.png)
+
+*Figure 2: Conceptual workflow illustrating sensor input, simulated data collection, processing, dashboard monitoring, and alert generation.*
+
+---
+
+## 📱 Mobile Responsive Preview
+
+![Smart Home Safety System Mobile View](screenshots/mobile.png)
+
+*Figure 3: Smart Home Safety System dashboard displayed on a mobile device, demonstrating its responsive layout.*
+
+---
+
 ## 🧭 Project Navigation & Overview
 
 The application features smooth scrolling navigation across dedicated portfolio sections:
@@ -58,6 +84,10 @@ Smart-Home-Portfolio/
 │   └── style.css       # Sci-Fi/Cyberpunk HUD theme, animations, dark/light modes, & responsive rules
 ├── js/
 │   └── script.js       # Sensor telemetry simulation, React micro-roots, Canvas gauge, safe DOM log
+├── screenshots/
+│   ├── dashboard.png   # Dashboard UI preview screenshot
+│   ├── workflow.png    # System workflow architecture diagram screenshot
+│   └── mobile.png      # Mobile responsive viewport screenshot
 └── README.md           # Comprehensive project documentation and portfolio showcase guide
 ```
 
@@ -79,7 +109,7 @@ Smart-Home-Portfolio/
 
 ---
 
-## 🔄 System Workflow
+## 🔄 System Workflow Pipeline
 
 ```
 [01. SENSORS] (Reed Switch, MQ-2, HC-SR04)
