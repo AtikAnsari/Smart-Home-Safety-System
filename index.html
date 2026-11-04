@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Home Safety — Control Panel (Portfolio Demo)</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&family=Exo+2:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+<!-- React 18 via CDN (Standalone UMD — zero build step required) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+</head>
+<body>
+
+<div class="scanlines"></div>
+<div class="bg-grid"></div>
+
+<!-- ── HEADER WITH RESPONSIVE NAVIGATION ── -->
+<header class="header">
+  <div class="header-container">
+    <a href="#dashboard" class="logo">
+      <div class="logo-icon"><i class="fa-solid fa-house-signal"></i></div>
+      <div class="logo-text">
+        <span class="logo-main">SMARTHOME</span>
+        <span class="logo-sub">SAFETY CONTROL</span>
+      </div>
+    </a>
+
+    <nav class="nav-menu" id="navMenu">
+      <a href="#dashboard" class="nav-link active"><i class="fa-solid fa-gauge-high"></i> DASHBOARD</a>
+      <a href="#about" class="nav-link"><i class="fa-solid fa-circle-info"></i> ABOUT</a>
+      <a href="#workflow" class="nav-link"><i class="fa-solid fa-diagram-project"></i> WORKFLOW</a>
+      <a href="#features" class="nav-link"><i class="fa-solid fa-star"></i> FEATURES</a>
+      <a href="#architecture" class="nav-link"><i class="fa-solid fa-sitemap"></i> ARCHITECTURE</a>
+      <a href="#tech-stack" class="nav-link"><i class="fa-solid fa-layer-group"></i> TECHNOLOGIES</a>
+    </nav>
+
+    <div class="header-right">
+      <div class="system-status" id="systemStatus">
+        <span class="status-dot online" id="statusDot"></span>
+        <span id="statusText">DEMO MODE · SIMULATED SENSOR DATA</span>
+      </div>
+      <div class="clock-wrap">
+        <div class="clock-time mono" id="clockTime">--:--:--</div>
+        <div class="clock-date" id="clockDate">--- -- ----</div>
+      </div>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark/light theme" title="Toggle theme">
+        <i class="fa-solid fa-circle-half-stroke"></i>
+      </button>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation menu" title="Toggle navigation">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+    </div>
+  </div>
+
+  <div class="ticker-bar">
+    <span class="ticker-label">DEMO</span>
+    <div class="ticker-wrap">
+      <div class="ticker-inner">DEMO MODE — SIMULATED SENSOR DATA &nbsp;◆&nbsp; SENSORS ACTIVE &nbsp;◆&nbsp; MONITORING ALL ZONES &nbsp;◆&nbsp; CLIENT-SIDE TELEMETRY ENGINE &nbsp;◆&nbsp; ZERO BACKEND REQUIRED &nbsp;◆&nbsp; REACT 18 COMPONENT RENDERING &nbsp;◆&nbsp; INTERACTIVE PORTFOLIO DEMO &nbsp;◆&nbsp; DEMO MODE — SIMULATED SENSOR DATA &nbsp;◆&nbsp; SENSORS ACTIVE &nbsp;◆&nbsp;</div>
+    </div>
+  </div>
+</header>
+
+<main class="dashboard" id="dashboard">
+
+  <!-- DEMO MODE NOTICE -->
+  <div class="demo-banner">
+    <div class="demo-banner-left">
+      <span class="demo-tag"><i class="fa-solid fa-flask"></i> DEMO MODE</span>
+      <span class="demo-title">DEMO MODE — SIMULATED SENSOR DATA</span>
+    </div>
+    <div class="demo-sub">Standalone Frontend Portfolio Showcase &bull; Zero Backend or Hardware Required</div>
+  </div>
+
+  <!-- Stats bar React root — renders live telemetry stats -->
+  <div id="reactStatsBar"></div>
+
+  <!-- SENSOR ARRAY -->
+  <div class="sec-head"><span class="sec-line"></span><span class="sec-title">SENSOR ARRAY</span><span class="sec-line"></span></div>
+
+  <div class="cards">
+
+    <!-- DOOR CARD -->
+    <div class="card" id="cardDoor">
+      <div class="card-glow"></div>
+      <div class="corner tl"></div><div class="corner tr"></div>
+      <div class="corner bl"></div><div class="corner br"></div>
+      <div class="card-top-row">
+        <span class="sensor-id">SEN-001</span>
+        <span class="sensor-tag">ENTRY POINT</span>
+      </div>
+      <div class="icon-ring"><i class="fa-solid fa-door-closed" id="doorIcon"></i></div>
+      <div class="card-name">DOOR LOCK</div>
+      <div id="reactDoorVal"></div>
+      <div id="doorBadge" class="badge-wrap"></div>
+      <div class="card-foot">
+        <span>Reed Switch · Pin 2 (Simulated)</span>
+        <span class="foot-dot" id="doorDot"></span>
+      </div>
+    </div>
+
+    <!-- GAS CARD -->
+    <div class="card" id="cardGas">
+      <div class="card-glow"></div>
+      <div class="corner tl"></div><div class="corner tr"></div>
+      <div class="corner bl"></div><div class="corner br"></div>
+      <div class="card-top-row">
+        <span class="sensor-id">SEN-002</span>
+        <span class="sensor-tag">ATMOSPHERE</span>
+      </div>
+      <div class="gauge-wrap">
+        <canvas id="gasGauge" width="200" height="110"></canvas>
+        <div id="reactGasVal"></div>
+      </div>
+      <div class="card-name">GAS LEVEL</div>
+      <div id="gasBadge" class="badge-wrap"></div>
+      <div class="card-foot">
+        <span>MQ-2 · Pin A0 (Simulated)</span>
+        <span class="foot-dot" id="gasDot"></span>
+      </div>
+    </div>
+
+    <!-- WATER CARD -->
+    <div class="card" id="cardWater">
+      <div class="card-glow"></div>
+      <div class="corner tl"></div><div class="corner tr"></div>
+      <div class="corner bl"></div><div class="corner br"></div>
+      <div class="card-top-row">
+        <span class="sensor-id">SEN-003</span>
+        <span class="sensor-tag">RESERVOIR</span>
+      </div>
+      <div class="tank-wrap">
+        <div class="tank-body">
+          <div class="tank-fill" id="waterFill">
+            <div class="wave w1"></div>
+            <div class="wave w2"></div>
+          </div>
+          <div class="tank-pct mono" id="waterTankLabel">—%</div>
+        </div>
+        <div class="tank-scale">
+          <span>100%</span><span>75%</span><span>50%</span><span>25%</span><span>0%</span>
+        </div>
+      </div>
+      <div class="card-name">WATER TANK</div>
+      <div id="waterBadge" class="badge-wrap"></div>
+      <div class="card-foot">
+        <span>HC-SR04 · Pin 9/10 (Simulated)</span>
+        <span class="foot-dot" id="waterDot"></span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ALERT STATUS -->
+  <div class="sec-head"><span class="sec-line"></span><span class="sec-title">ALERT STATUS</span><span class="sec-line"></span></div>
+
+  <div class="alert-panel" id="alertPanel">
+    <div class="alert-icon-col">
+      <div class="alert-icon-ring" id="alertIconRing">
+        <i id="alertIcon" class="fa-solid fa-shield-halved"></i>
+      </div>
+    </div>
+    <div class="alert-body">
+      <div class="alert-code mono" id="alertCode">STATUS · OK</div>
+      <div class="alert-title" id="alertTitle">ALL SYSTEMS NOMINAL</div>
+      <div class="alert-msg" id="alertMsg">No anomalies detected across all sensor zones. Your home is secure.</div>
+    </div>
+    <div class="alert-level-col">
+      <div class="alert-level" id="alertLevel">SAFE</div>
+    </div>
+  </div>
+
+  <!-- MANUAL OVERRIDE & SIMULATION -->
+  <div class="sec-head">
+    <span class="sec-line"></span>
+    <span class="sec-title">MANUAL OVERRIDE</span>
+    <span class="sec-line" style="flex:1"></span>
+    <button class="sim-toggle-btn" id="simToggleBtn" onclick="toggleSimulation()" aria-label="Toggle simulation">
+      <i class="fa-solid fa-pause"></i> <span id="simToggleText">PAUSE SIMULATION</span>
+    </button>
+  </div>
+
+  <div class="ctrl-panel">
+    <div class="ctrl-row">
+      <div class="ctrl-label"><i class="fa-solid fa-door-closed"></i> DOOR</div>
+      <div class="ctrl-btns">
+        <button class="ctrl-btn safe"   onclick="manualSet('door','LOCKED')"><i class="fa-solid fa-lock"></i> LOCK</button>
+        <button class="ctrl-btn danger" onclick="manualSet('door','UNLOCKED')"><i class="fa-solid fa-lock-open"></i> UNLOCK</button>
+      </div>
+    </div>
+    <div class="ctrl-row">
+      <div class="ctrl-label"><i class="fa-solid fa-fire-flame-curved"></i> GAS</div>
+      <div class="ctrl-btns">
+        <button class="ctrl-btn safe"   onclick="manualSet('gas',5)"><i class="fa-solid fa-check"></i> SAFE 5%</button>
+        <button class="ctrl-btn warn"   onclick="manualSet('gas',30)"><i class="fa-solid fa-exclamation"></i> WARN 30%</button>
+        <button class="ctrl-btn danger" onclick="manualSet('gas',75)"><i class="fa-solid fa-triangle-exclamation"></i> HIGH 75%</button>
+      </div>
+    </div>
+    <div class="ctrl-row">
+      <div class="ctrl-label"><i class="fa-solid fa-droplet"></i> WATER</div>
+      <div class="ctrl-btns">
+        <button class="ctrl-btn safe"   onclick="manualSet('water',40)"><i class="fa-solid fa-check"></i> NORMAL 40%</button>
+        <button class="ctrl-btn warn"   onclick="manualSet('water',80)"><i class="fa-solid fa-exclamation"></i> HIGH 80%</button>
+        <button class="ctrl-btn danger" onclick="manualSet('water',97)"><i class="fa-solid fa-triangle-exclamation"></i> OVERFLOW 97%</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- EVENT LOG -->
+  <div class="sec-head" style="margin-top:32px;">
+    <span class="sec-line"></span>
+    <span class="sec-title">EVENT LOG</span>
+    <span class="sec-line" style="flex:1"></span>
+    <button class="clear-btn" onclick="clearActivity()"><i class="fa-solid fa-trash-can"></i> DELETE</button>
+  </div>
+
+  <div class="log-panel">
+    <div class="log-head-row">
+      <span>TIMESTAMP</span><span>EVENT DESCRIPTION</span><span>LEVEL</span><span></span>
+    </div>
+    <ul id="activityLog" class="log-list"></ul>
+  </div>
+
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       SECTION 2: ABOUT THE PROJECT
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <section class="portfolio-section" id="about">
+    <div class="sec-head">
+      <span class="sec-line"></span>
+      <span class="sec-title">ABOUT THE PROJECT</span>
+      <span class="sec-line"></span>
+    </div>
+
+    <div class="section-lead">
+      <span class="section-lead-badge"><i class="fa-solid fa-bullseye"></i> Executive Summary</span>
+      The Smart Home Safety System is an IoT-inspired home monitoring dashboard designed to demonstrate how sensor-based monitoring can improve household safety. It represents a smart monitoring environment with door security, gas leakage detection, and water-level monitoring through a unified interface.
+    </div>
+
+    <div class="about-grid">
+
+      <!-- Card 1: Door Security -->
+      <div class="about-card">
+        <div class="corner tl"></div><div class="corner tr"></div>
+        <div class="corner bl"></div><div class="corner br"></div>
+        <div class="about-card-top">
+          <div class="about-icon-ring"><i class="fa-solid fa-door-closed"></i></div>
+          <span class="sensor-tag">SECURITY MATRIX</span>
+        </div>
+        <div class="about-card-title">Smart Door Security</div>
+        <ul class="about-card-list">
+          <li><i class="fa-solid fa-chevron-right"></i> Simulates door status using a Reed Switch.</li>
+          <li><i class="fa-solid fa-chevron-right"></i> Displays LOCKED and UNLOCKED states.</li>
+          <li><i class="fa-solid fa-chevron-right"></i> Demonstrates access-status monitoring.</li>
+        </ul>
+      </div>
+
+      <!-- Card 2: Gas Leakage -->
+      <div class="about-card">
+        <div class="corner tl"></div><div class="corner tr"></div>
+        <div class="corner bl"></div><div class="corner br"></div>
+        <div class="about-card-top">
+          <div class="about-icon-ring"><i class="fa-solid fa-fire-flame-curved"></i></div>
+          <span class="sensor-tag">ATMOSPHERE</span>
+        </div>
+        <div class="about-card-title">Gas Leakage Monitoring</div>
+        <ul class="about-card-list">
+          <li><i class="fa-solid fa-chevron-right"></i> Represents an MQ-2 gas sensor.</li>
+          <li><i class="fa-solid fa-chevron-right"></i> Displays simulated gas concentration levels.</li>
+          <li><i class="fa-solid fa-chevron-right"></i> Provides safe, warning, and danger alerts.</li>
+        </ul>
+      </div>
+
+      <!-- Card 3: Water Level -->
+      <div class="about-card">
+        <div class="corner tl"></div><div class="corner tr"></div>
+        <div class="corner bl"></div><div class="corner br"></div>
+        <div class="about-card-top">
+          <div class="about-icon-ring"><i class="fa-solid fa-droplet"></i></div>
+          <span class="sensor-tag">RESERVOIR</span>
+        </div>
+        <div class="about-card-title">Water Level Monitoring</div>
+        <ul class="about-card-list">
+          <li><i class="fa-solid fa-chevron-right"></i> Represents an HC-SR04 ultrasonic sensor.</li>
+          <li><i class="fa-solid fa-chevron-right"></i> Displays simulated water tank levels.</li>
+          <li><i class="fa-solid fa-chevron-right"></i> Demonstrates high-level and overflow warnings.</li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       SECTION 3: SYSTEM WORKFLOW
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <section class="portfolio-section" id="workflow">
+    <div class="sec-head">
+      <span class="sec-line"></span>
+      <span class="sec-title">SYSTEM WORKFLOW</span>
+      <span class="sec-line"></span>
+    </div>
+
+    <div class="workflow-wrap">
+      <div class="workflow-notice">
+        <i class="fa-solid fa-circle-info"></i>
+        <span><strong>CONCEPTUAL &amp; SIMULATED WORKFLOW:</strong> This pipeline illustrates how sensor inputs flow into client-side ingestion, processing, and visual alert dispatch. All data shown is client-side simulated.</span>
+      </div>
+
+      <div class="workflow-track">
+
+        <!-- Step 1 -->
+        <div class="workflow-step">
+          <span class="step-badge">STEP 01</span>
+          <div class="step-icon"><i class="fa-solid fa-microchip"></i></div>
+          <div class="step-title">SENSORS</div>
+          <div class="step-sub">Reed Switch, MQ-2, HC-SR04</div>
+        </div>
+
+        <div class="workflow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+
+        <!-- Step 2 -->
+        <div class="workflow-step">
+          <span class="step-badge">STEP 02</span>
+          <div class="step-icon"><i class="fa-solid fa-satellite-dish"></i></div>
+          <div class="step-title">DATA COLLECTION</div>
+          <div class="step-sub">Simulated Sensor Readings</div>
+        </div>
+
+        <div class="workflow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+
+        <!-- Step 3 -->
+        <div class="workflow-step">
+          <span class="step-badge">STEP 03</span>
+          <div class="step-icon"><i class="fa-solid fa-gears"></i></div>
+          <div class="step-title">PROCESSING</div>
+          <div class="step-sub">JavaScript Simulation Engine</div>
+        </div>
+
+        <div class="workflow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+
+        <!-- Step 4 -->
+        <div class="workflow-step">
+          <span class="step-badge">STEP 04</span>
+          <div class="step-icon"><i class="fa-solid fa-chart-line"></i></div>
+          <div class="step-title">DASHBOARD</div>
+          <div class="step-sub">Visual Monitoring &amp; Status Updates</div>
+        </div>
+
+        <div class="workflow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+
+        <!-- Step 5 -->
+        <div class="workflow-step">
+          <span class="step-badge">STEP 05</span>
+          <div class="step-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+          <div class="step-title">ALERT SYSTEM</div>
+          <div class="step-sub">Safe, Warning, Critical</div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       SECTION 4: KEY FEATURES
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <section class="portfolio-section" id="features">
+    <div class="sec-head">
+      <span class="sec-line"></span>
+      <span class="sec-title">KEY FEATURES</span>
+      <span class="sec-line"></span>
+    </div>
+
+    <div class="features-grid">
+
+      <!-- Feature 1 -->
+      <div class="feature-card">
+        <div class="feature-head">
+          <div class="feature-icon"><i class="fa-solid fa-satellite-dish"></i></div>
+          <span class="feature-id">FT-01</span>
+        </div>
+        <div class="feature-title">Real-Time-Style Monitoring</div>
+        <div class="feature-desc">Simulated sensor stream updates telemetry synchronously without requiring backend servers.</div>
+      </div>
+
+      <!-- Feature 2 -->
+      <div class="feature-card">
+        <div class="feature-head">
+          <div class="feature-icon"><i class="fa-solid fa-chart-line"></i></div>
+          <span class="feature-id">FT-02</span>
+        </div>
+        <div class="feature-title">Automatic Sensor Fluctuations</div>
+        <div class="feature-desc">Integrated random walk models ambient noise, natural ventilation decay, and reservoir drainage.</div>
+      </div>
+
+      <!-- Feature 3 -->
+      <div class="feature-card">
+        <div class="feature-head">
+          <div class="feature-icon"><i class="fa-solid fa-sliders"></i></div>
+          <span class="feature-id">FT-03</span>
+        </div>
+        <div class="feature-title">Interactive Manual Overrides</div>
+        <div class="feature-desc">Direct control buttons for door, gas, and water with an intelligent 15-second grace hold period.</div>
+      </div>
+
+      <!-- Feature 4 -->
+      <div class="feature-card">
+        <div class="feature-head">
+          <div class="feature-icon"><i class="fa-solid fa-shield-halved"></i></div>
+          <span class="feature-id">FT-04</span>
+        </div>
+        <div class="feature-title">Dynamic Tri-Tier Alerts</div>
+        <div class="feature-desc">Automated threat escalation into Safe (green), Warning (amber), and Danger (pulsing red) states.</div>
+      </div>
+
+      <!-- Feature 5 -->
+      <div class="feature-card">
+        <div class="feature-head">
+          <div class="feature-icon"><i class="fa-solid fa-gauge"></i></div>
+          <span class="feature-id">FT-05</span>
+        </div>
+        <div class="feature-title">Animated Gas-Level Gauge</div>
+        <div class="feature-desc">Custom HTML5 Canvas radial gauge with dynamic color zones, tick marks, and needle physics.</div>
+      </div>
+
+      <!-- Feature 6 -->
+      <div class="feature-card">
+        <div class="feature-head">
+          <div class="feature-icon"><i class="fa-solid fa-water"></i></div>
+          <span class="feature-id">FT-06</span>
+        </div>
+        <div class="feature-title">Animated Water Tank</div>
+        <div class="feature-desc">Fluid level visualization featuring SVG dual-wave motion and reactive overflow warning thresholds.</div>
+      </div>
+
+      <!-- Feature 7 -->
+      <div class="feature-card">
+        <div class="feature-head">
+          <div class="feature-icon"><i class="fa-solid fa-clock"></i></div>
+          <span class="feature-id">FT-07</span>
+        </div>
+        <div class="feature-title">Live Digital HUD Clock</div>
+        <div class="feature-desc">Synchronized digital time and calendar display formatted in futuristic Share Tech Mono typography.</div>
+      </div>
+
+      <!-- Feature 8 -->
+      <div class="feature-card">
+        <div class="feature-head">
+          <div class="feature-icon"><i class="fa-solid fa-circle-half-stroke"></i></div>
+          <span class="feature-id">FT-08</span>
+        </div>
+        <div class="feature-title">Dark &amp; Light Theme Switcher</div>
+        <div class="feature-desc">Seamless one-click theme switching driven by CSS custom properties and Canvas color re-rendering.</div>
+      </div>
+
+      <!-- Feature 9 -->
+      <div class="feature-card">
+        <div class="feature-head">
+          <div class="feature-icon"><i class="fa-solid fa-list-check"></i></div>
+          <span class="feature-id">FT-09</span>
+        </div>
+        <div class="feature-title">Persistent Activity Log</div>
+        <div class="feature-desc">Safe DOM event recording with severity tags, individual deletion, and localStorage persistence.</div>
+      </div>
+
+      <!-- Feature 10 -->
+      <div class="feature-card">
+        <div class="feature-head">
+          <div class="feature-icon"><i class="fa-solid fa-circle-pause"></i></div>
+          <span class="feature-id">FT-10</span>
+        </div>
+        <div class="feature-title">Pause &amp; Resume Simulation</div>
+        <div class="feature-desc">Interactive toggle lets reviewers freeze the simulation engine to inspect UI states in detail.</div>
+      </div>
+
+      <!-- Feature 11 -->
+      <div class="feature-card">
+        <div class="feature-head">
+          <div class="feature-icon"><i class="fa-solid fa-mobile-screen"></i></div>
+          <span class="feature-id">FT-11</span>
+        </div>
+        <div class="feature-title">Responsive Dashboard Interface</div>
+        <div class="feature-desc">Fluid layouts with CSS grid and flexbox, fully optimized across 4K displays, tablets, and phones.</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       SECTION 5: PROJECT ARCHITECTURE
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <section class="portfolio-section" id="architecture">
+    <div class="sec-head">
+      <span class="sec-line"></span>
+      <span class="sec-title">PROJECT ARCHITECTURE</span>
+      <span class="sec-line"></span>
+    </div>
+
+    <div class="arch-wrap">
+      <div class="arch-diagram">
+
+        <!-- User Layer -->
+        <div class="arch-box root">
+          <div class="arch-box-title"><i class="fa-solid fa-user"></i> USER / BROWSER CLIENT</div>
+          <div class="arch-box-desc">Interacts via Theme Toggles, Manual Overrides &amp; Navigation</div>
+        </div>
+
+        <div class="arch-connector"><i class="fa-solid fa-arrow-down"></i></div>
+
+        <!-- Dashboard UI Layer -->
+        <div class="arch-box">
+          <div class="arch-box-title"><i class="fa-solid fa-desktop"></i> SMART HOME DASHBOARD UI</div>
+          <div class="arch-box-desc">Central Presentation Layer · React 18 Roots + HTML5 Canvas</div>
+        </div>
+
+        <div class="arch-connector"><i class="fa-solid fa-arrow-down"></i></div>
+
+        <!-- Modules Grid -->
+        <div class="arch-modules-grid">
+          <div class="arch-module-card">
+            <i class="fa-solid fa-door-closed"></i>
+            <div class="arch-module-title">Door Security Module</div>
+            <div class="arch-module-desc">Contact status, access verification &amp; breach detection</div>
+          </div>
+          <div class="arch-module-card">
+            <i class="fa-solid fa-fire-flame-curved"></i>
+            <div class="arch-module-title">Gas Monitoring Module</div>
+            <div class="arch-module-desc">PPM concentration, Canvas arc gauge &amp; toxicity warning</div>
+          </div>
+          <div class="arch-module-card">
+            <i class="fa-solid fa-droplet"></i>
+            <div class="arch-module-title">Water Monitoring Module</div>
+            <div class="arch-module-desc">Ultrasonic depth, fluid wave physics &amp; overflow safety</div>
+          </div>
+          <div class="arch-module-card">
+            <i class="fa-solid fa-bell"></i>
+            <div class="arch-module-title">Alert &amp; Activity Module</div>
+            <div class="arch-module-desc">Tri-tier threat matrix &amp; localStorage event persistence</div>
+          </div>
+        </div>
+
+        <div class="arch-connector"><i class="fa-solid fa-arrow-down"></i></div>
+
+        <!-- Engine Layer -->
+        <div class="arch-box engine">
+          <div class="arch-box-title"><i class="fa-solid fa-microchip"></i> CLIENT-SIDE SIMULATION ENGINE</div>
+          <div class="arch-box-desc">JavaScript Telemetry Generator · Realistic Jitter, Spikes &amp; Override Grace Periods</div>
+        </div>
+
+      </div>
+
+      <div class="arch-explanation">
+        <i class="fa-solid fa-code"></i>
+        <strong>Architectural Summary:</strong> The dashboard uses client-side JavaScript to simulate physical sensor readings and update the interface in real time. Decoupling the frontend presentation layer from physical hardware enables instant portfolio demonstration with zero server latency, zero cloud costs, and complete offline availability.
+      </div>
+    </div>
+  </section>
+
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       SECTION 6: TECHNOLOGY STACK
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <section class="portfolio-section" id="tech-stack">
+    <div class="sec-head">
+      <span class="sec-line"></span>
+      <span class="sec-title">TECHNOLOGY STACK</span>
+      <span class="sec-line"></span>
+    </div>
+
+    <!-- Software Stack -->
+    <div class="tech-subhead"><i class="fa-solid fa-code"></i> IMPLEMENTED SOFTWARE STACK</div>
+    <div class="tech-grid">
+
+      <!-- HTML5 -->
+      <div class="tech-card">
+        <div class="tech-icon"><i class="fa-brands fa-html5"></i></div>
+        <div class="tech-info">
+          <div class="tech-name">HTML5</div>
+          <div class="tech-desc">Semantic dashboard structure, accessibility containers, and component mounting targets.</div>
+        </div>
+      </div>
+
+      <!-- CSS3 -->
+      <div class="tech-card">
+        <div class="tech-icon"><i class="fa-brands fa-css3-alt"></i></div>
+        <div class="tech-info">
+          <div class="tech-name">CSS3</div>
+          <div class="tech-desc">Cyberpunk styling, custom CSS variables, SVG wave animations, and mobile media queries.</div>
+        </div>
+      </div>
+
+      <!-- JavaScript ES6+ -->
+      <div class="tech-card">
+        <div class="tech-icon"><i class="fa-brands fa-js"></i></div>
+        <div class="tech-info">
+          <div class="tech-name">JavaScript ES6+</div>
+          <div class="tech-desc">Centralized sensor simulation engine, telemetry state management, and DOM event listeners.</div>
+        </div>
+      </div>
+
+      <!-- React 18 CDN -->
+      <div class="tech-card">
+        <div class="tech-icon"><i class="fa-brands fa-react"></i></div>
+        <div class="tech-info">
+          <div class="tech-name">React 18 CDN</div>
+          <div class="tech-desc">Micro-root component rendering for high-frequency telemetry stats, door value, and gas percentage.</div>
+        </div>
+      </div>
+
+      <!-- Canvas API -->
+      <div class="tech-card">
+        <div class="tech-icon"><i class="fa-solid fa-compass-drafting"></i></div>
+        <div class="tech-info">
+          <div class="tech-name">HTML5 Canvas API</div>
+          <div class="tech-desc">Gas-level gauge visualization with dynamic colored zone rendering and animated needle arcs.</div>
+        </div>
+      </div>
+
+      <!-- LocalStorage -->
+      <div class="tech-card">
+        <div class="tech-icon"><i class="fa-solid fa-database"></i></div>
+        <div class="tech-info">
+          <div class="tech-name">LocalStorage API</div>
+          <div class="tech-desc">Client-side persistence for dark/light theme preferences and historical safety event logs.</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Prototype Hardware Group -->
+    <div class="tech-subhead"><i class="fa-solid fa-microchip"></i> PROTOTYPE HARDWARE SPECIFICATION</div>
+    <div class="hardware-group">
+      <div class="hardware-notice">
+        <i class="fa-solid fa-circle-exclamation"></i>
+        <span><strong>PROTOTYPE SPECIFICATION:</strong> The components below represent the original physical IoT hardware specifications. In this portfolio demo, all sensor telemetry is simulated client-side. No physical hardware is currently connected.</span>
+      </div>
+
+      <div class="hardware-grid">
+
+        <!-- Arduino Uno -->
+        <div class="hardware-card">
+          <div class="hardware-name"><i class="fa-solid fa-microchip"></i> Arduino Uno</div>
+          <div class="hardware-desc">Original prototype microcontroller for sensor polling and serial telemetry transmission.</div>
+        </div>
+
+        <!-- Reed Switch -->
+        <div class="hardware-card">
+          <div class="hardware-name"><i class="fa-solid fa-magnet"></i> Reed Switch</div>
+          <div class="hardware-desc">Magnetic contact sensor for door closure and physical entry-point monitoring.</div>
+        </div>
+
+        <!-- MQ-2 Gas Sensor -->
+        <div class="hardware-card">
+          <div class="hardware-name"><i class="fa-solid fa-smog"></i> MQ-2 Sensor</div>
+          <div class="hardware-desc">Semiconductor gas sensor for flammable gases, LPG, and smoke concentration detection.</div>
+        </div>
+
+        <!-- HC-SR04 -->
+        <div class="hardware-card">
+          <div class="hardware-name"><i class="fa-solid fa-ruler-vertical"></i> HC-SR04</div>
+          <div class="hardware-desc">Ultrasonic distance sensor for real-time water reservoir depth and overflow measurement.</div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ── FOOTER ── -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="footer-brand-header">
+        <i class="fa-solid fa-house-signal fa-2x"></i>
+        <div>
+          <div class="footer-name">SMART HOME SAFETY SYSTEM</div>
+          <div class="footer-desc">Frontend Portfolio Demo &bull; Interactive Client-Side IoT Simulation</div>
+        </div>
+      </div>
+      <p class="footer-disclaimer">
+        <i class="fa-solid fa-circle-info"></i>
+        <strong>DEMO MODE DISCLAIMER:</strong> This is a standalone software engineering portfolio demo. Telemetry is simulated client-side in JavaScript. No physical hardware, Arduino, or backend server is connected.
+      </p>
+      <div class="footer-links">
+        <a href="#" class="github-placeholder" onclick="event.preventDefault(); alert('GitHub repository placeholder. Link pending.');" title="GitHub Repository Placeholder">
+          <i class="fa-brands fa-github"></i> GitHub Repository [Link Pending]
+        </a>
+      </div>
+    </div>
+
+    <div class="footer-cols">
+      <div>
+        <div class="fcol-title">ORIGINAL PROTOTYPE SPEC</div>
+        <p>Arduino Uno (Simulated)</p>
+        <p>MQ-2 Gas Sensor · HC-SR04</p>
+        <p>Magnetic Reed Switch</p>
+        <p>Active Buzzer &bull; 5V DC Spec</p>
+      </div>
+      <div>
+        <div class="fcol-title">TECHNOLOGY SUMMARY</div>
+        <p>HTML5 &bull; CSS3 Custom Props</p>
+        <p>JavaScript ES6+ &bull; React 18</p>
+        <p>Canvas Gauge &bull; SVG Waves</p>
+        <p>LocalStorage Persistence</p>
+      </div>
+      <div>
+        <div class="fcol-title">PORTFOLIO DEMO SPEC</div>
+        <p>Standalone Client Architecture</p>
+        <p>Zero Backend Dependencies</p>
+        <p>Safe DOM Sanitized Event Log</p>
+        <p>Fully Responsive Cyberpunk HUD</p>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bar">
+    <span>&copy; 2026 Smart Home Safety System &bull; Frontend Portfolio Demo Edition</span>
+    <span>Simulated Telemetry &bull; Designed for Recruiter &amp; Engineering Showcase</span>
+  </div>
+</footer>
+
+<script src="js/script.js"></script>
+</body>
+</html>
